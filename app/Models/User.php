@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'total_points',
     ];
 
     /**
@@ -44,5 +46,54 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Check if user is admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is student
+     */
+    public function isStudent(): bool
+    {
+        return $this->role === 'student';
+    }
+
+    /**
+     * Get enrollments for this user
+     */
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    /**
+     * Get initiatives this user is enrolled in
+     */
+    public function initiatives()
+    {
+        return $this->belongsToMany(Initiative::class, 'enrollments');
+    }
+
+    /**
+     * Get completed tasks for this user
+     */
+    public function completedTasks()
+    {
+        return $this->hasMany(TaskCompletion::class);
+    }
+
+    /**
+     * Update total points for this user
+     */
+    public function updateTotalPoints()
+    {
+        $this->total_points = $this->completedTasks()->sum('points_awarded');
+        $this->save();
     }
 }
