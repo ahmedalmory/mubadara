@@ -161,9 +161,20 @@
                                                     </div>
                                                     <div>
                                                         @if($isCompleted)
-                                                            <span class="badge bg-success">
-                                                                <i class="bi bi-check-circle me-1"></i>{{ $completion->points_awarded }}
-                                                            </span>
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <span class="badge bg-success">
+                                                                    <i class="bi bi-check-circle me-1"></i>{{ $completion->points_awarded }}
+                                                                </span>
+                                                                <form action="{{ route('admin.tasks.uncomplete', [$task, $student]) }}" method="POST" class="d-inline">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="btn btn-outline-warning btn-sm" 
+                                                                            onclick="return confirm('{{ __('messages.Are you sure you want to mark this task as uncompleted?') }}')"
+                                                                            title="{{ __('messages.Mark Uncomplete') }}">
+                                                                        <i class="bi bi-arrow-counterclockwise"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
                                                         @else
                                                             <button class="btn btn-outline-primary btn-sm" 
                                                                     data-bs-toggle="modal" 

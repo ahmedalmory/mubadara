@@ -163,18 +163,38 @@
                                                 @endif
                                             </div>
                                             <p class="text-muted mb-2">{{ $task->getLocalizedDescription() }}</p>
-                                            <div class="d-flex align-items-center">
-                                                <span class="badge bg-warning me-2">
-                                                    <i class="bi bi-star me-1"></i>{{ $task->points_value }} {{ __('messages.Points') }}
-                                                </span>
-                                                @if(in_array($task->id, $completedTasks))
-                                                    <span class="badge bg-success">
-                                                        <i class="bi bi-check-circle me-1"></i>{{ __('messages.Completed') }}
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="badge bg-warning me-2">
+                                                        <i class="bi bi-star me-1"></i>{{ $task->points_value }} {{ __('messages.Points') }}
                                                     </span>
+                                                    @if(in_array($task->id, $completedTasks))
+                                                        <span class="badge bg-success">
+                                                            <i class="bi bi-check-circle me-1"></i>{{ __('messages.Completed') }}
+                                                        </span>
+                                                    @else
+                                                        <span class="badge bg-secondary">
+                                                            <i class="bi bi-clock me-1"></i>{{ __('messages.Pending') }}
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                @if(!in_array($task->id, $completedTasks))
+                                                    <form method="POST" action="{{ route('student.tasks.complete', $task) }}" class="d-inline">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-success btn-sm" 
+                                                                onclick="return confirm('{{ __('messages.Are you sure you want to mark this task as completed?') }}')">
+                                                            <i class="bi bi-check-circle me-1"></i>{{ __('messages.Mark Complete') }}
+                                                        </button>
+                                                    </form>
                                                 @else
-                                                    <span class="badge bg-secondary">
-                                                        <i class="bi bi-clock me-1"></i>{{ __('messages.Pending') }}
-                                                    </span>
+                                                    <form method="POST" action="{{ route('student.tasks.uncomplete', $task) }}" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-warning btn-sm" 
+                                                                onclick="return confirm('{{ __('messages.Are you sure you want to mark this task as uncompleted?') }}')">
+                                                            <i class="bi bi-arrow-counterclockwise me-1"></i>{{ __('messages.Mark Uncomplete') }}
+                                                        </button>
+                                                    </form>
                                                 @endif
                                             </div>
                                         </div>

@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
         Route::get('students', [\App\Http\Controllers\Admin\StudentController::class, 'index'])->name('students.index');
         Route::get('students/{student}', [\App\Http\Controllers\Admin\StudentController::class, 'show'])->name('students.show');
         Route::post('tasks/{task}/complete/{student}', [\App\Http\Controllers\Admin\TaskController::class, 'markComplete'])->name('tasks.complete');
+        Route::delete('tasks/{task}/uncomplete/{student}', [\App\Http\Controllers\Admin\TaskController::class, 'markUncomplete'])->name('tasks.uncomplete');
         Route::get('rankings', [\App\Http\Controllers\Admin\RankingController::class, 'index'])->name('rankings');
     });
     
@@ -39,6 +40,8 @@ Route::middleware('auth')->group(function () {
         Route::get('initiatives', [\App\Http\Controllers\Student\InitiativeController::class, 'index'])->name('initiatives.index');
         Route::get('initiatives/{initiative}', [\App\Http\Controllers\Student\InitiativeController::class, 'show'])->name('initiatives.show');
         Route::post('initiatives/{initiative}/enroll', [\App\Http\Controllers\Student\InitiativeController::class, 'enroll'])->name('initiatives.enroll');
+        Route::post('tasks/{task}/complete', [\App\Http\Controllers\Student\TaskController::class, 'markComplete'])->name('tasks.complete');
+        Route::delete('tasks/{task}/uncomplete', [\App\Http\Controllers\Student\TaskController::class, 'markUncomplete'])->name('tasks.uncomplete');
         Route::get('rankings', [\App\Http\Controllers\Student\RankingController::class, 'index'])->name('rankings');
     });
 });

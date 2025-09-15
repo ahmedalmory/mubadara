@@ -152,4 +152,31 @@ class TaskController extends Controller
 
         return back()->with('success', __('messages.Task completed successfully'));
     }
+
+    /**
+     * Mark task as uncompleted for a student
+     */
+    public function markUncomplete(Request $request, Task $task, User $student)
+    {
+        // Check if task is actually completed
+        if (!$task->isCompletedBy($student->id)) {
+            return back()->with('error', __('messages.Task is not completed by this student'));
+        }
+
+        // Check if student is enrolled in the initiative
+        if (!$task->initiative->isUserEnrolled($student->id)) {
+            return back()->with('error', __('messages.Student not enrolled in this initiative'));
+        }
+
+        // Find and delete the completion record
+        $completion = $task->getCompletionFor($student->id);
+        if ($completion) {
+            $pointsLost = $completion->points_awarded;
+            $completion->delete();
+            
+            return back()->with('success', __('messages.Task uncompleted successfully for student', ['student' => $student->name, 'points' => $pointsLost]));
+        }
+
+        return back()->with('error', __('messages.Unable to uncomplete task'));
+    }
 }
